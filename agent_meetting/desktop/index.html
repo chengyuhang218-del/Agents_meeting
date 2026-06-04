@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Agent Meeting Desktop</title>
+    <link rel="stylesheet" href="/assets/styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <div>
+          <h1>Agent Meeting Desktop</h1>
+          <p id="runtime-status">正在连接本地工作台...</p>
+        </div>
+        <div class="topbar-actions">
+          <button id="refresh-btn" type="button">刷新</button>
+        </div>
+      </header>
+
+      <section class="workspace-grid">
+        <aside class="panel agents-panel">
+          <div class="panel-header">
+            <h2>Agents</h2>
+            <span id="agent-count">0</span>
+          </div>
+          <div id="agent-list" class="agent-list"></div>
+
+          <details class="create-agent-panel">
+            <summary>创建 Agent</summary>
+            <form id="agent-form" class="stack form-block">
+              <label>
+                Agent ID
+                <input name="agent_id" required placeholder="statistician" />
+              </label>
+              <label>
+                名称
+                <input name="name" placeholder="Statistician Agent" />
+              </label>
+              <label>
+                角色
+                <input name="role" placeholder="统计学与研究设计专家" />
+              </label>
+              <label>
+                职责
+                <textarea name="responsibilities" rows="3" placeholder="统计建模, 偏倚评估, 样本量建议"></textarea>
+              </label>
+              <label>
+                输出格式
+                <textarea name="output_format" rows="2" placeholder="统计风险, 模型建议, 关键结论"></textarea>
+              </label>
+              <label>
+                触发词
+                <input name="triggers" placeholder="统计, Cox, meta-analysis" />
+              </label>
+              <button type="submit">保存 Agent</button>
+            </form>
+          </details>
+        </aside>
+
+        <section class="panel meeting-panel">
+          <div class="panel-header">
+            <h2>3D 办公室会议室</h2>
+            <div class="meeting-actions">
+              <span id="scene-status">等待开会</span>
+              <button id="stop-meeting-btn" class="danger-btn" type="button" disabled>终止会议</button>
+            </div>
+          </div>
+          <div id="office-scene" class="office-scene" aria-label="3D office meeting room">
+            <div id="employee-legend" class="employee-legend" aria-label="Agent employee legend"></div>
+          </div>
+        </section>
+
+        <section class="panel launcher-panel">
+          <div class="panel-header">
+            <h2>一键开会</h2>
+            <span>OpenClaw 协同</span>
+          </div>
+          <form id="meeting-form" class="meeting-form">
+            <label class="wide">
+              会议主题 / 研究问题
+              <textarea name="goal" rows="4" required placeholder="例如：NF1基因突变在黑色素瘤中的作用机制"></textarea>
+            </label>
+            <div class="field-row">
+              <label>
+                会议轮数
+                <input name="rounds" type="number" min="1" max="5" value="1" />
+              </label>
+              <label>
+                搜索模式
+                <select name="search_mode">
+                  <option value="off">off：不联网</option>
+                  <option value="strict">strict：强相关联网补充</option>
+                  <option value="auto" selected>auto：自动检索过滤</option>
+                </select>
+              </label>
+              <label>
+                搜索后端
+                <select name="search_backend">
+                  <option value="api">api</option>
+                  <option value="browser">browser</option>
+                  <option value="hybrid" selected>hybrid</option>
+                </select>
+              </label>
+            </div>
+            <button type="submit">启动会议</button>
+          </form>
+
+          <div class="section-header">
+            <h2>Run Queue</h2>
+          </div>
+          <div id="job-list" class="job-list"></div>
+        </section>
+
+        <section class="panel projects-panel">
+          <div class="panel-header">
+            <h2 id="selected-agent-title">Agent 聊天</h2>
+            <span id="selected-agent-status">未选择</span>
+          </div>
+          <div id="agent-chat-log" class="chat-log"></div>
+          <form id="agent-chat-form" class="chat-form">
+            <textarea id="agent-chat-input" rows="1" placeholder="给当前 Agent 发消息"></textarea>
+            <button type="submit">发送</button>
+          </form>
+        </section>
+
+        <section class="panel report-panel">
+          <div class="panel-header">
+            <h2>运行详情</h2>
+            <span id="meeting-log-status">无会议</span>
+          </div>
+          <div id="meeting-log" class="meeting-log"></div>
+          <div class="project-strip">
+            <div class="section-header compact">
+              <h2>Projects</h2>
+              <span id="project-count">0</span>
+            </div>
+            <div id="project-list" class="project-list compact-list"></div>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script type="module" src="/assets/app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,19 @@
+{
+  "name": "agent_meetting",
+  "version": "1.0.0",
+  "description": "> **一句话**: 对你的 Main Agent 说一个研究课题 → 它自动调度 Literature / Paper / Bio / Coding Agent 开会讨论 → 输出最终研究报告。",
+  "main": "index.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "three": "^0.165.0"
+  }
+}

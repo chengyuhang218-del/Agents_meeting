@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agent-meetting"
+version = "0.1.0"
+description = "OpenClaw-style scientific multi-agent company MVP"
+requires-python = ">=3.10"
+dependencies = [
+  "playwright>=1.44",
+]
+
+[project.scripts]
+agent-meetting = "agent_meetting.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["agent_meetting*"]
+
+[tool.setuptools.package-data]
+agent_meetting = [
+  "desktop/*.html",
+  "desktop/*.css",
+  "desktop/*.js",
+  "desktop/vendor/*.js",
+]
