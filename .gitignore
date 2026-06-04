@@ -1,0 +1,71 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+env/
+
+# Node / frontend
+node_modules/
+npm-debug.log*
+yarn-error.log*
+dist/
+build/
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.token
+*token*
+*secret*
+*credentials*
+
+# macOS / editor
+.DS_Store
+*.swp
+.idea/
+.vscode/
+
+# Runtime output
+logs/
+tmp/
+cache/
+.cache/
+projects/
+*.log
+*.pid
+
+# Local app/screenshot artifacts
+*.app/
+*.png
+*.jpg
+*.jpeg
+*.webp
+*.mov
+*.mp4
+!docs/screenshots/.gitkeep
+!docs/screenshots/*.png
+!docs/screenshots/*.jpg
+!docs/screenshots/*.jpeg
+!docs/screenshots/*.webp
+
+# OpenClaw private state/config. Never commit user account, session, or gateway state.
+.openclaw/
+openclaw_workspace/
+OPENCLAW_SETUP.md
+**/.openclaw/
+**/sessions/
+**/session*.json*
+**/transcripts/
+**/telegram/
+**/credentials/
+**/identity/
+**/memory/
+**/plugin-state/

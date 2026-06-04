@@ -1,77 +1,47 @@
-# Agent Meetting
+# Agent Meeting Desktop
 
-Agent Meetting is a local OpenClaw multi-agent office. It reads agents already created on your machine, shows them in a browser UI, and lets you start multi-agent meetings, chat with one agent, stop running meetings, and review run results.
+> A local 3D office for OpenClaw agents: start a meeting, let Main assign the right agents, watch the team move through the office, chat with agents one by one, and review every run from a single queue.
 
-The app runs locally. It does not require committing OpenClaw credentials, API keys, Telegram config, sessions, or private workspace files.
+<p align="center">
+  <img src="docs/screenshots/homepage.png" alt="Agent Meeting Desktop homepage" width="100%" />
+</p>
 
-## Features
+<p align="center">
+  <img alt="Python" src="https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white" />
+  <img alt="OpenClaw" src="https://img.shields.io/badge/OpenClaw-local_agents-111827?style=for-the-badge" />
+  <img alt="Three.js" src="https://img.shields.io/badge/Three.js-3D_office-000000?style=for-the-badge&logo=three.js&logoColor=white" />
+  <img alt="Run Queue" src="https://img.shields.io/badge/Run_Queue-meetings%20%7C%20chat%20%7C%20reports-2F7D68?style=for-the-badge" />
+</p>
 
-- Read local OpenClaw agents automatically with `openclaw agents list --json`
-- Browser-based 3D office view for meeting status
-- One-click meeting where Main decides which agents to call
-- Individual agent chat through OpenClaw CLI
-- Run Queue for meetings, logs, agent messages, errors, and final reports
-- Real literature/data search context through PubMed, Europe PMC, CrossRef, and GEO
-- Real cancellation: stop button cancels the backend job and terminates OpenClaw subprocesses
+## What Is This?
 
-## Screenshots
+**Agent Meeting Desktop** turns a local OpenClaw workspace into a visual multi-agent control room.
 
-Place screenshots in:
+Instead of manually switching between agents, you describe a research question once. Main decides which agents should join, brings them into a meeting room for task briefing, sends them back to workstations, collects their outputs, and produces a final report. Every meeting, single-agent chat, log entry, and report is tracked in the Run Queue.
 
-```text
-docs/screenshots/
-```
+The app runs on your own machine. It reads agents already created in local OpenClaw and does not require committing OpenClaw credentials, API keys, Telegram settings, sessions, or private workspace files.
 
-Suggested files before publishing:
+## Highlights
 
-- `docs/screenshots/office.png`
-- `docs/screenshots/run-queue.png`
-- `docs/screenshots/agent-chat.png`
+- **Local OpenClaw integration**: reads agents through `openclaw agents list --json`, with a fallback to local agent folders.
+- **3D office interface**: agents sit, walk, meet, return to desks, idle, work, and show behavior states.
+- **Main-controlled meetings**: the user enters a topic; Main chooses which agents to call.
+- **Single-agent chat**: click any agent in the sidebar and send a direct message to a fresh OpenClaw session.
+- **Run Queue**: meetings, single chats, logs, messages, errors, and final reports live in one place.
+- **Real cancellation**: terminating a meeting cancels the backend job and kills active OpenClaw subprocesses.
+- **Research context**: optional PubMed / Europe PMC / CrossRef / GEO lookup before agent calls.
+- **GitHub-safe by default**: `.gitignore` excludes generated runs, local OpenClaw state, secrets, sessions, cache, and app bundles.
 
-Screenshots are ignored by default except the folder placeholder. Remove or adjust `.gitignore` if you want to commit selected images.
-
-## Install
+## Quick Start
 
 ```bash
-git clone https://github.com/your-name/agent-meetting.git
-cd agent-meetting
+git clone https://github.com/your-name/agent-meeting-desktop.git
+cd agent-meeting-desktop
 python3 -m pip install -e .
-```
-
-Optional browser-backed PubMed search:
-
-```bash
-python3 -m pip install "playwright>=1.44"
-```
-
-## Configure
-
-Copy the example env file if you want explicit settings:
-
-```bash
-cp .env.example .env
-```
-
-Useful variables:
-
-```bash
-OPENCLAW_BIN=openclaw
-OPENCLAW_AGENT_CONFIG_PATH=
-SERVER_PORT=8765
-FRONTEND_PORT=
-DEFAULT_MEETING_ROUNDS=1
-ENABLE_BROWSER_SEARCH=false
-```
-
-The current Python server reads `OPENCLAW_BIN` or `AGENT_MEETTING_OPENCLAW_BIN` when calling OpenClaw.
-
-## Run
-
-```bash
 python3 -m agent_meetting serve --host 127.0.0.1 --port 8765
 ```
 
-Then open the printed URL, usually:
+Then open:
 
 ```text
 http://127.0.0.1:8765
@@ -86,30 +56,64 @@ python3 -m agent_meetting app --host 127.0.0.1 --port 8765
 CLI meeting:
 
 ```bash
-python3 -m agent_meetting run "Your research question"
+python3 -m agent_meetting run "Find recent evidence about NF1 mutation in melanoma"
 ```
 
-## Connect Local OpenClaw
+## Requirements
 
-Install and configure OpenClaw first. Confirm it works:
+- Python 3.10+
+- A working local OpenClaw installation
+- Local OpenClaw agents already created
+- Modern browser
+
+Optional browser-backed search:
+
+```bash
+python3 -m pip install "playwright>=1.44"
+```
+
+## Configuration
+
+Copy the example environment file if you want explicit local settings:
+
+```bash
+cp .env.example .env
+```
+
+Example variables:
+
+```bash
+OPENCLAW_BIN=openclaw
+OPENCLAW_AGENT_CONFIG_PATH=
+SERVER_PORT=8765
+FRONTEND_PORT=
+DEFAULT_MEETING_ROUNDS=1
+ENABLE_BROWSER_SEARCH=false
+```
+
+The server reads `OPENCLAW_BIN` or `AGENT_MEETTING_OPENCLAW_BIN` when calling OpenClaw.
+
+## Connect OpenClaw
+
+Confirm OpenClaw works before launching the UI:
 
 ```bash
 openclaw status
 openclaw agents list --json
 ```
 
-Agent Meetting discovers agents in this order:
+Agent discovery order:
 
 1. `openclaw agents list --json`
 2. fallback to `~/.openclaw/agents/*`
 
-The integration code lives in:
+Integration code:
 
 ```text
 agent_meetting/services/openclaw_service.py
 ```
 
-Functions provided:
+Provided service functions:
 
 - `listOpenClawAgents()`
 - `getOpenClawAgent(agentId)`
@@ -117,14 +121,14 @@ Functions provided:
 - `startMeeting(participants, topic)`
 - `stopMeeting(meetingId)`
 
-Each agent is normalized to:
+Normalized agent shape:
 
 ```json
 {
   "id": "literature",
-  "name": "LiteratureAgent",
+  "name": "Literature Agent",
   "role": "OpenClaw Agent",
-  "description": "LiteratureAgent",
+  "description": "Literature Agent",
   "source": "openclaw",
   "status": "available"
 }
@@ -133,45 +137,70 @@ Each agent is normalized to:
 ## One-Click Meeting
 
 1. Open the web UI.
-2. Enter a meeting topic / research question.
+2. Enter a meeting topic or research question.
 3. Choose meeting rounds and search mode.
-4. Main selects the participating agents automatically.
-5. Click `启动会议`.
+4. Click `启动会议`.
+5. Main selects the participating agents automatically.
 
-When a meeting starts, Main brings the required agents to the meeting room for task briefing, then agents return to workstations while OpenClaw calls run.
+When the meeting starts, Main brings the required agents into the meeting room for task briefing. After the briefing, agents return to their desks while OpenClaw calls run in the backend.
 
-## Individual Agent Chat
+### What Does "Rounds" Mean?
 
-1. Click an agent in the left sidebar.
-2. Type a message in the single-agent chat panel.
-3. The backend calls:
+A round is one full discussion pass.
+
+- `1` round: fast, cheaper, good for simple questions.
+- `2` rounds: agents can react to previous outputs and improve coverage.
+- `3+` rounds: deeper discussion, slower and more token-expensive.
+
+For literature/data search, `1-2` rounds is usually enough.
+
+## Single-Agent Chat
+
+Click an agent in the left sidebar to open an individual chat panel.
+
+Each message is sent to the selected OpenClaw agent through the backend. Direct chat uses a fresh session key for each send, so unrelated previous conversations are not merged into the current question.
+
+Typical backend call shape:
 
 ```bash
 openclaw agent --agent <id> --message "<message>" --json
 ```
 
-Chat history is stored in the current browser session state and also appears as a run type target for future extension.
-
 ## Run Queue
 
-Run Queue shows:
+Every meeting or direct chat can be represented as a run item:
+
+```ts
+type RunItem = {
+  id: string
+  type: "meeting" | "single_chat" | "task"
+  status: "pending" | "running" | "stopped" | "completed" | "failed"
+  participants: string[]
+  logs: string[]
+  messages: unknown[]
+  finalResult?: string
+  error?: string
+}
+```
+
+The Run Queue shows:
 
 - title
 - status
 - created time
 - participants
-- round count/current phase
-- stopped/completed state
+- current round / phase
+- stopped or completed state
 - logs
 - agent messages
-- final result
-- error text
+- final report
+- errors
 
-Click a run item to view details. Final reports render as Markdown and can be copied or opened as `.md` through the report endpoint.
+Final reports can be opened as a standalone HTML report page.
 
 ## Stop A Meeting
 
-Click `终止会议` or the Run Queue stop button.
+Click `终止会议`.
 
 The backend will:
 
@@ -179,13 +208,13 @@ The backend will:
 - set the job cancellation token
 - terminate active OpenClaw subprocesses
 - prevent later rounds from starting
-- write a log event: `会议已被用户终止`
+- write a log event that the meeting was stopped by the user
 
-This is not just a UI hide operation.
+This is not just hiding the UI.
 
 ## Outputs
 
-Meetings write local project artifacts under:
+Local meeting artifacts are written under:
 
 ```text
 projects/YYYYMMDD-HHMMSS-topic/
@@ -198,50 +227,79 @@ projects/YYYYMMDD-HHMMSS-topic/
 
 `projects/` is ignored by Git because it contains local run output.
 
-## Common Questions
+## Project Layout
+
+```text
+agent_meetting/
+  desktop/                 # Browser UI, Three.js office, chat panels
+  services/
+    openclaw_service.py    # OpenClaw CLI adapter
+    run_queue_service.py   # Run queue data model
+  desktop_server.py        # Local HTTP API + frontend server
+  orchestrator.py          # Main-led meeting workflow
+  agents.py                # Agent call and cancellation layer
+  research_tools.py        # Literature/data search context
+config/                    # Default agent and meeting rules
+docs/                      # Setup and integration docs
+examples/                  # Example prompts/materials
+```
+
+## API Surface
+
+Common local endpoints:
+
+- `GET /api/agents`
+- `POST /api/agents`
+- `POST /api/meetings`
+- `POST /api/jobs/{job_id}/cancel`
+- `GET /api/jobs`
+- `GET /api/run-queue`
+- `POST /api/agents/{agent_id}/chat`
+- `GET /api/projects/{project_id}/report.html`
+
+## Privacy Checklist Before Publishing
+
+Do not commit:
+
+- `.env`
+- API keys or tokens
+- `projects/`
+- `openclaw_workspace/`
+- copied `~/.openclaw` config
+- Telegram credentials or channel IDs
+- sessions, transcripts, cache, memory, plugin state
+- generated app bundles
+- personal screenshots unless intentionally added
+
+This repository is designed to keep private OpenClaw state outside Git.
+
+## Troubleshooting
 
 ### The UI says OpenClaw is missing
-
-Check:
 
 ```bash
 which openclaw
 openclaw status
 ```
 
-Set `OPENCLAW_BIN` if needed.
+Set `OPENCLAW_BIN` if OpenClaw is installed in a custom location.
 
 ### Agents do not appear
-
-Run:
 
 ```bash
 openclaw agents list --json
 ```
 
-If this fails, fix OpenClaw first. The app will fallback to `~/.openclaw/agents`, but CLI JSON is preferred.
+Fix OpenClaw first if this command fails.
 
-### Literature/data search returns weak results
+### Literature or data search is weak
 
-Use `search_mode=strict` for stronger filtering. Use `search_backend=hybrid` to combine browser PubMed and API search.
+Use `search_mode=strict` for stronger filtering or `search_backend=hybrid` to combine browser and API search.
 
-### Stop button does not stop immediately
+### Stop does not feel instant
 
-The current OpenClaw subprocess is terminated by the backend cancellation token. A short delay can occur while the process receives SIGTERM/SIGKILL.
+The backend sends cancellation to the active OpenClaw subprocess. A short delay can happen while the process receives `SIGTERM` and, if needed, `SIGKILL`.
 
-### Can I commit my OpenClaw config?
+## License
 
-No. Never commit `~/.openclaw`, tokens, credentials, Telegram config, sessions, cache, or generated projects.
-
-## Privacy Checklist Before GitHub
-
-Check that these are not committed:
-
-- `.env` and any API keys
-- `projects/`
-- `openclaw_workspace/`
-- `~/.openclaw` or copied OpenClaw configs
-- Telegram credentials or channel IDs
-- session/transcript/cache files
-- personal screenshots unless intentionally selected
-- `.DS_Store`
+Add your preferred license before publishing.
