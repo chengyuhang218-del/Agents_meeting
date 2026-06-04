@@ -103,6 +103,24 @@ python3 -m pip install path/to/agent_meetting-0.1.1-py3-none-any.whl
 agent-meeting serve
 ```
 
+## macOS DMG Installer
+
+macOS users can download the DMG from the GitHub Release page:
+
+```text
+Agent-Meeting-Desktop-0.1.1-macOS.dmg
+```
+
+Open the DMG, drag `Agent Meeting Desktop.app` into `Applications`, then launch it like a normal Mac app.
+
+The app bundle contains the Python wheel and creates a private virtual environment under:
+
+```text
+~/Library/Application Support/Agent Meeting Desktop/
+```
+
+The DMG launcher still requires Python 3 on the Mac. For real agent calls, OpenClaw must also be installed and configured on that machine.
+
 ## Configuration
 
 Copy the example environment file if you want explicit local settings:
