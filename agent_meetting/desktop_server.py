@@ -32,10 +32,10 @@ from .workspace import ProjectWorkspace
 
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-CONFIG_DIR = REPO_ROOT / "config"
+CONFIG_DIR = Path(__file__).resolve().parent / "config"
 AGENTS_PATH = CONFIG_DIR / "agents.json"
 RULES_PATH = CONFIG_DIR / "meeting_rules.json"
-PROJECTS_DIR = REPO_ROOT / "projects"
+PROJECTS_DIR = Path.cwd() / "projects"
 STATIC_DIR = Path(__file__).resolve().parent / "desktop"
 
 

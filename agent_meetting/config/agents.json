@@ -1,0 +1,44 @@
+{
+  "agents": [
+    {
+      "agent_id": "main",
+      "name": "Main Agent",
+      "role": "项目经理 / 总协调人",
+      "responsibilities": ["接收用户任务", "分析任务需求", "选择 Agent", "分配任务", "收集结果", "输出最终结论"],
+      "output_format": ["项目总结", "文献证据", "数据资源", "分析建议", "下一步计划"],
+      "triggers": []
+    },
+    {
+      "agent_id": "literature",
+      "name": "Literature Agent",
+      "role": "文献检索专家",
+      "responsibilities": ["PubMed 检索", "Google Scholar 检索", "最新论文发现", "文献列表整理"],
+      "output_format": ["论文标题", "期刊", "年份", "DOI", "核心发现"],
+      "triggers": ["文献", "论文", "pubmed", "scholar", "kras", "gsk3", "gsk3β", "pancreatic", "胰腺癌"]
+    },
+    {
+      "agent_id": "paper",
+      "name": "Paper Agent",
+      "role": "论文阅读专家",
+      "responsibilities": ["阅读重点论文", "总结方法学", "提取实验设计", "分析创新点", "识别不足"],
+      "output_format": ["背景", "方法", "结果", "创新点", "局限性"],
+      "triggers": ["阅读", "方法", "机制", "实验", "创新", "局限"]
+    },
+    {
+      "agent_id": "bio",
+      "name": "Bio Agent",
+      "role": "生物信息学专家",
+      "responsibilities": ["GEO 数据集搜索", "TCGA 数据分析建议", "单细胞分析方案", "MR 分析建议", "实验验证建议"],
+      "output_format": ["可用数据集", "分析流程", "验证方案"],
+      "triggers": ["geo", "tcga", "单细胞", "数据集", "分析", "验证", "生信", "mr"]
+    },
+    {
+      "agent_id": "coding",
+      "name": "Coding Agent",
+      "role": "程序开发专家",
+      "responsibilities": ["编写代码", "修复代码", "开发插件", "自动化流程"],
+      "output_format": ["代码", "项目结构", "实现方案"],
+      "triggers": ["代码", "开发", "插件", "自动化", "脚本", "api"]
+    }
+  ]
+}

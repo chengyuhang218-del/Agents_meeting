@@ -1,0 +1,42 @@
+{
+  "task_rules": {
+    "literature": {
+      "title": "文献综述",
+      "context_agents": ["research"],
+      "instruction": "Research goal: {goal}\n\n{search_instruction}\n\n## Built-in real search context\nThe Main Agent already performed web/API searches before this task. Use the supplied PubMed/CrossRef/GEO context as evidence. You may add more papers only if they are real and include DOI or PMID.\n\n## Task\nWrite a structured literature survey covering: executive summary, thematic grouping of key papers, methodologies, knowledge gaps, and specific questions for the Paper Agent.\n\n## Output Format\n1. Executive summary of key findings\n2. Thematic grouping of papers with per-paper analysis\n3. Key knowledge gaps\n4. Specific questions for Paper Agent\n5. Reference list (titles, DOI, PMID for each paper)"
+    },
+    "paper": {
+      "title": "论文深度分析与方法评估",
+      "context_agents": ["research", "literature"],
+      "instruction": "Research goal: {goal}\n\nReview and analyze the papers found by the built-in search and Literature Agent. For each paper: evaluate methodology, results, innovations, and limitations. Identify causal vs. correlational findings. Suggest analysis directions for Bio Agent."
+    },
+    "bio": {
+      "title": "生信分析与实验验证方案设计",
+      "context_agents": ["research", "literature", "paper"],
+      "instruction": "Research goal: {goal}\n\nDesign bioinformatics analysis plans based on the searched datasets, literature, and paper analysis. Recommend datasets (TCGA, GEO, single-cell, etc.). Design analysis pipeline (DEG, enrichment, survival). Propose experimental validation strategies."
+    },
+    "coding": {
+      "title": "代码与自动化方案设计",
+      "context_agents": ["research", "literature", "paper", "bio"],
+      "instruction": "Research goal: {goal}\n\nDesign a code/automation framework for implementing the analysis proposed by Bio Agent. Propose tool integration, pipeline architecture, and automation scripts."
+    }
+  },
+  "discussion_rounds": [
+    {
+      "sender": "literature",
+      "recipient": "paper",
+      "instruction": "Review the real search context and literature findings. Ask Paper Agent about methodology gaps, unclear findings, or missing papers you identified."
+    },
+    {
+      "sender": "paper",
+      "recipient": "bio",
+      "instruction": "Review the searched papers and ask Bio Agent for specific data analysis or validation suggestions based on the evidence."
+    },
+    {
+      "sender": "bio",
+      "recipient": "literature",
+      "instruction": "Ask Literature Agent to find additional supporting evidence for your proposed analysis. Refer to concrete datasets or mechanisms where possible."
+    }
+  ],
+  "final_instruction": "As {agent_id}, provide your final summary and key recommendations for: {goal}. Incorporate insights from the real search context and discussion rounds above."
+}

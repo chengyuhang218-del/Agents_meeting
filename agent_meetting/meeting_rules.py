@@ -5,7 +5,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
-DEFAULT_RULES_PATH = Path(__file__).resolve().parent.parent / "config" / "meeting_rules.json"
+DEFAULT_RULES_PATH = Path(__file__).resolve().parent / "config" / "meeting_rules.json"
 
 
 @dataclass(frozen=True)

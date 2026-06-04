@@ -1,4 +1,3 @@
-"""OpenClaw Agent Company MVP."""
+"""Agent Meeting Desktop package."""
 
-__version__ = "0.1.0"
-
+__version__ = "0.1.1"

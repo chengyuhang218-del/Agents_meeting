@@ -6,7 +6,7 @@ from pathlib import Path
 from .models import AgentSpec
 
 
-DEFAULT_REGISTRY_PATH = Path(__file__).resolve().parent.parent / "config" / "agents.json"
+DEFAULT_REGISTRY_PATH = Path(__file__).resolve().parent / "config" / "agents.json"
 
 
 class AgentRegistry:

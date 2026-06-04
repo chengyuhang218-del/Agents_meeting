@@ -34,11 +34,20 @@ The app runs on your own machine. It reads agents already created in local OpenC
 
 ## Quick Start
 
+Install directly from GitHub:
+
 ```bash
-git clone https://github.com/your-name/agent-meeting-desktop.git
-cd agent-meeting-desktop
+python3 -m pip install "agent-meetting @ git+https://github.com/chengyuhang218-del/Agents_meeting.git"
+agent-meeting serve --host 127.0.0.1 --port 8765
+```
+
+Or clone the repository for development:
+
+```bash
+git clone https://github.com/chengyuhang218-del/Agents_meeting.git
+cd Agents_meeting
 python3 -m pip install -e .
-python3 -m agent_meetting serve --host 127.0.0.1 --port 8765
+agent-meeting serve --host 127.0.0.1 --port 8765
 ```
 
 Then open:
@@ -50,13 +59,19 @@ http://127.0.0.1:8765
 App-like browser window:
 
 ```bash
-python3 -m agent_meetting app --host 127.0.0.1 --port 8765
+agent-meeting app --host 127.0.0.1 --port 8765
 ```
 
 CLI meeting:
 
 ```bash
-python3 -m agent_meetting run "Find recent evidence about NF1 mutation in melanoma"
+agent-meeting run "Find recent evidence about NF1 mutation in melanoma"
+```
+
+The legacy command name also works:
+
+```bash
+agent-meetting serve
 ```
 
 ## Requirements
@@ -71,6 +86,17 @@ Optional browser-backed search:
 ```bash
 python3 -m pip install "playwright>=1.44"
 ```
+
+## Install From A Wheel
+
+Release builds can be installed without cloning the repository:
+
+```bash
+python3 -m pip install dist/agent_meetting-0.1.1-py3-none-any.whl
+agent-meeting serve
+```
+
+If you publish the wheel as a GitHub Release asset, users can download it and install it with the same `pip install path/to/file.whl` command.
 
 ## Configuration
 

@@ -4,23 +4,30 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "agent-meetting"
-version = "0.1.0"
-description = "OpenClaw-style scientific multi-agent company MVP"
+version = "0.1.1"
+description = "A local 3D office and meeting desktop for OpenClaw agents"
+readme = "README.md"
 requires-python = ">=3.10"
+license = "MIT"
 dependencies = [
   "playwright>=1.44",
 ]
 
 [project.scripts]
 agent-meetting = "agent_meetting.cli:main"
+agent-meeting = "agent_meetting.cli:main"
 
 [tool.setuptools.packages.find]
 include = ["agent_meetting*"]
 
 [tool.setuptools.package-data]
 agent_meetting = [
+  "config/*.json",
   "desktop/*.html",
   "desktop/*.css",
   "desktop/*.js",
   "desktop/vendor/*.js",
+  "desktop/vendor/loaders/*.js",
+  "desktop/vendor/utils/*.js",
+  "desktop/models/*.glb",
 ]
