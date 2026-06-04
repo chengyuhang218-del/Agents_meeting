@@ -189,25 +189,58 @@ show_error() {
 trap 'show_error "启动过程中发生错误。请确认已安装 Python 3，并查看日志。"' ERR
 
 find_python() {
-  if command -v python3 >/dev/null 2>&1; then
-    command -v python3
-    return 0
+  local candidates=(
+    "$HOME/miniforge3/bin/python3"
+    "$HOME/miniconda3/bin/python3"
+    "$HOME/anaconda3/bin/python3"
+    "/opt/homebrew/bin/python3"
+    "/usr/local/bin/python3"
+  )
+
+  local from_path
+  from_path="$(command -v python3 || true)"
+  if [[ -n "$from_path" ]]; then
+    candidates+=("$from_path")
   fi
-  if [[ -x /opt/homebrew/bin/python3 ]]; then
-    echo /opt/homebrew/bin/python3
-    return 0
-  fi
-  if [[ -x /usr/local/bin/python3 ]]; then
-    echo /usr/local/bin/python3
-    return 0
-  fi
+  candidates+=("/usr/bin/python3")
+
+  local candidate version_ok
+  for candidate in "${candidates[@]}"; do
+    if [[ ! -x "$candidate" ]]; then
+      continue
+    fi
+    version_ok="$("$candidate" - <<'PY' || true
+import sys
+print("1" if sys.version_info >= (3, 10) else "0")
+PY
+)"
+    if [[ "$version_ok" == "1" ]]; then
+      echo "$candidate"
+      return 0
+    fi
+  done
   return 1
 }
 
 PYTHON="$(find_python || true)"
 if [[ -z "$PYTHON" ]]; then
-  osascript -e 'display alert "Python 3 未检测到" message "请先安装 Python 3，然后重新打开 Agent Meeting Desktop。"'
+  SYSTEM_PYTHON_VERSION="$(/usr/bin/python3 -c 'import sys; print(".".join(map(str, sys.version_info[:3])))' 2>/dev/null || echo unknown)"
+  osascript -e "display alert \"Python 3.10+ 未检测到\" message \"Finder 启动 App 时没有找到 Python 3.10 或更高版本。系统 /usr/bin/python3 当前是 $SYSTEM_PYTHON_VERSION。请安装 Python 3.10+，或确认 Miniforge/Conda/Homebrew Python 已存在。\""
   exit 1
+fi
+
+echo "Using Python: $PYTHON ($("$PYTHON" -c 'import sys; print(sys.version.split()[0])'))"
+
+if [[ -d "$VENV_DIR" ]]; then
+  VENV_OK="$("$VENV_DIR/bin/python" - <<'PY' || true
+import sys
+print("1" if sys.version_info >= (3, 10) else "0")
+PY
+)"
+  if [[ "$VENV_OK" != "1" ]]; then
+    echo "Existing venv uses an old Python; recreating: $VENV_DIR"
+    rm -rf "$VENV_DIR"
+  fi
 fi
 
 if [[ ! -d "$VENV_DIR" ]]; then
