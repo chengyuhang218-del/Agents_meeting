@@ -89,14 +89,19 @@ python3 -m pip install "playwright>=1.44"
 
 ## Install From A Wheel
 
-Release builds can be installed without cloning the repository:
+The repository also includes a prebuilt wheel package:
 
 ```bash
-python3 -m pip install dist/agent_meetting-0.1.1-py3-none-any.whl
+python3 -m pip install "https://github.com/chengyuhang218-del/Agents_meeting/raw/main/packages/agent_meetting-0.1.1-py3-none-any.whl"
 agent-meeting serve
 ```
 
-If you publish the wheel as a GitHub Release asset, users can download it and install it with the same `pip install path/to/file.whl` command.
+If you download the file manually, install it with:
+
+```bash
+python3 -m pip install path/to/agent_meetting-0.1.1-py3-none-any.whl
+agent-meeting serve
+```
 
 ## Configuration
 
