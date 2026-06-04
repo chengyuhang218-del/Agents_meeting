@@ -61,13 +61,22 @@ def _list_agents_from_cli() -> list[OpenClawAgent]:
 
 
 def _list_agents_from_local_dirs() -> list[OpenClawAgent]:
-    root = Path.home() / ".openclaw" / "agents"
-    if not root.exists():
-        return []
+    roots = []
+    if os.getenv("OPENCLAW_STATE_DIR"):
+        roots.append(Path(os.getenv("OPENCLAW_STATE_DIR", "")) / "agents")
+    if os.getenv("OPENCLAW_HOME"):
+        roots.append(Path(os.getenv("OPENCLAW_HOME", "")) / "agents")
+    if os.getenv("AGENTMEETING_HOME"):
+        roots.append(Path(os.getenv("AGENTMEETING_HOME", "")) / "openclaw" / "agents")
+    if not os.getenv("AGENTMEETING_HOME"):
+        roots.append(Path.home() / ".openclaw" / "agents")
     agents = []
-    for path in sorted(root.iterdir()):
-        if path.is_dir() and not path.name.startswith("."):
-            agents.append(OpenClawAgent(id=path.name, name=path.name, status="available"))
+    for root in roots:
+        if not root.exists():
+            continue
+        for path in sorted(root.iterdir()):
+            if path.is_dir() and not path.name.startswith("."):
+                agents.append(OpenClawAgent(id=path.name, name=path.name, status="available"))
     return agents
 
 
@@ -126,4 +135,3 @@ def stopMeeting(meetingId: str, cancel_callback: Callable[[str], bool] | None = 
     if cancel_callback:
         return cancel_callback(meetingId)
     return False
-

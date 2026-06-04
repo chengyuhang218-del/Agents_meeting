@@ -4,6 +4,7 @@ import json
 import mimetypes
 import errno
 import html
+import os
 import shutil
 import subprocess
 import threading
@@ -27,15 +28,17 @@ from .services.openclaw_service import (
     listOpenClawAgents,
     sendMessageToOpenClawAgent,
 )
+from .services.environment_service import get_environment_status
 from .services.run_queue_service import RunQueueItem, status_from_job
 from .workspace import ProjectWorkspace
 
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
+APP_HOME = Path(os.getenv("AGENTMEETING_HOME", Path.cwd()))
 CONFIG_DIR = Path(__file__).resolve().parent / "config"
 AGENTS_PATH = CONFIG_DIR / "agents.json"
 RULES_PATH = CONFIG_DIR / "meeting_rules.json"
-PROJECTS_DIR = Path.cwd() / "projects"
+PROJECTS_DIR = APP_HOME / "projects"
 STATIC_DIR = Path(__file__).resolve().parent / "desktop"
 
 
@@ -175,7 +178,10 @@ class DesktopRequestHandler(BaseHTTPRequestHandler):
             elif path.startswith("/assets/"):
                 self._send_file(STATIC_DIR / path.removeprefix("/assets/"))
             elif path == "/api/health":
-                self._send_json({"ok": True, "openclaw": detect_openclaw()})
+                environment = get_environment_status()
+                self._send_json({"ok": True, "environment": environment, "openclaw": detect_openclaw()})
+            elif path == "/api/environment/status":
+                self._send_json(get_environment_status())
             elif path == "/api/agents":
                 self._send_json({"agents": list_agents()})
             elif path == "/api/projects":

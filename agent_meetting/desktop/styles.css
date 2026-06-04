@@ -118,6 +118,71 @@ h3 {
   margin-top: 14px;
 }
 
+.environment-panel {
+  margin-top: 14px;
+}
+
+.environment-status {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+  padding: 12px;
+  background: #fbfcfc;
+}
+
+.env-card {
+  min-height: 112px;
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--muted);
+  border-radius: 7px;
+  padding: 10px;
+  background: #ffffff;
+}
+
+.env-card.ok {
+  border-left-color: var(--accent);
+}
+
+.env-card.warn {
+  border-left-color: var(--gold);
+  background: #fffdf6;
+}
+
+.env-card.error {
+  border-left-color: var(--danger);
+  background: #fff8f8;
+}
+
+.env-card strong {
+  display: block;
+  font-size: 13px;
+  line-height: 1.3;
+}
+
+.env-card span,
+.env-card code,
+.env-card p {
+  display: block;
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.env-card code {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #334248;
+}
+
+.env-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 8px;
+}
+
 .panel {
   min-height: 0;
   border: 1px solid var(--line);

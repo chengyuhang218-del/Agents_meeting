@@ -108,18 +108,31 @@ agent-meeting serve
 macOS users can download the DMG from the GitHub Release page:
 
 ```text
-Agent-Meeting-Desktop-0.1.1-macOS.dmg
+Agent-Meeting-Desktop-0.1.1-bundled-macOS.dmg
 ```
 
 Open the DMG, drag `Agent Meeting Desktop.app` into `Applications`, then launch it like a normal Mac app.
 
-The app bundle contains the Python wheel and creates a private virtual environment under:
+The bundled DMG includes:
+
+- an embedded Python runtime packaged by PyInstaller
+- a private Node.js runtime
+- a private OpenClaw CLI package
+- the Agent Meeting Desktop browser UI and 3D assets
+
+It does not require the user to install Python, OpenClaw, npm, or Homebrew before launching the app.
+
+Runtime data, OpenClaw config, agents, logs, and meeting output are stored under:
 
 ```text
-~/Library/Application Support/Agent Meeting Desktop/
+~/Library/Application Support/AgentMeeting/
 ```
 
-The DMG launcher still requires Python 3 on the Mac. For real agent calls, OpenClaw must also be installed and configured on that machine.
+If the bundled runtime is missing or damaged, the app shows a Chinese error dialog and writes details to:
+
+```text
+~/Library/Application Support/AgentMeeting/logs/launcher.log
+```
 
 ## Configuration
 

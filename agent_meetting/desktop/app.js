@@ -14,6 +14,7 @@ const state = {
   agentChats: {},
   runQueue: [],
   selectedRunId: "",
+  environment: null,
   meeting: {
     id: "",
     isRunning: false,
@@ -35,6 +36,8 @@ const state = {
 
 const els = {
   runtime: document.getElementById("runtime-status"),
+  environmentSummary: document.getElementById("environment-summary"),
+  environmentStatus: document.getElementById("environment-status"),
   refresh: document.getElementById("refresh-btn"),
   agents: document.getElementById("agent-list"),
   agentCount: document.getElementById("agent-count"),
@@ -617,16 +620,74 @@ async function api(path, options = {}) {
 }
 
 async function loadAll() {
-  await Promise.all([loadHealth(), loadAgents(), loadProjects(), loadJobs()]);
+  await Promise.all([loadHealth(), loadEnvironment(), loadAgents(), loadProjects(), loadJobs()]);
 }
 
 async function loadHealth() {
   const data = await api("/api/health");
+  const environment = data.environment || null;
   const openclaw = data.openclaw || {};
-  const status = openclaw.configured_exists || openclaw.path_executable
+  const status = environment?.summary || (openclaw.configured_exists || openclaw.path_executable
     ? "OpenClaw 已检测到，工作台就绪"
-    : "未检测到 openclaw，可先配置 OpenClaw 后再运行会议";
+    : "未检测到 openclaw，可先配置 OpenClaw 后再运行会议");
   els.runtime.textContent = status;
+}
+
+async function loadEnvironment() {
+  try {
+    state.environment = await api("/api/environment/status");
+  } catch (error) {
+    state.environment = {
+      ready: false,
+      summary: `环境检测失败：${error.message}`,
+      checks: {},
+      nextSteps: ["请刷新页面或查看后端日志。"],
+    };
+  }
+  renderEnvironment();
+}
+
+function renderEnvironment() {
+  if (!els.environmentStatus) return;
+  const env = state.environment || {};
+  const checks = env.checks || {};
+  els.environmentSummary.textContent = env.summary || "等待检测";
+  const ordered = ["python", "openclaw", "config", "api", "agents"];
+  els.environmentStatus.innerHTML = ordered.map((key) => renderEnvironmentCard(checks[key], key)).join("");
+}
+
+function renderEnvironmentCard(check, key) {
+  const fallbackLabels = {
+    python: "Python 3.10+",
+    openclaw: "OpenClaw CLI",
+    config: "OpenClaw 配置",
+    api: "模型/API 配置",
+    agents: "Agents",
+  };
+  if (!check) {
+    return `
+      <article class="env-card warn">
+        <strong>${escapeHtml(fallbackLabels[key] || key)}</strong>
+        <span>尚未检测。</span>
+      </article>
+    `;
+  }
+  const className = check.ok ? "ok" : key === "api" || key === "agents" ? "warn" : "error";
+  const actions = (check.actions || []).map((action) => {
+    const label = escapeHtml(action.label || "查看");
+    const title = escapeHtml(action.command || action.url || "后续版本会接入 App 内一键操作");
+    return `<span class="mini-action" title="${title}">${label}</span>`;
+  }).join("");
+  return `
+    <article class="env-card ${className}">
+      <strong>${escapeHtml(check.label || fallbackLabels[key] || key)}</strong>
+      <span class="pill ${check.ok ? "blue" : "gold"}">${escapeHtml(check.status || (check.ok ? "ok" : "需要处理"))}</span>
+      ${check.version ? `<span>版本：${escapeHtml(check.version)}</span>` : ""}
+      ${check.path ? `<code title="${escapeHtml(check.path)}">${escapeHtml(check.path)}</code>` : ""}
+      ${check.detail ? `<p>${escapeHtml(check.detail)}</p>` : ""}
+      ${actions ? `<div class="env-actions">${actions}</div>` : ""}
+    </article>
+  `;
 }
 
 async function loadAgents() {
@@ -982,6 +1043,16 @@ els.agentForm.addEventListener("submit", async (event) => {
 
 els.meetingForm.addEventListener("submit", async (event) => {
   event.preventDefault();
+  await loadEnvironment();
+  const blockedSteps = (state.environment?.nextSteps || []).filter(Boolean);
+  if (blockedSteps.length) {
+    appendMeetingMessage(
+      "environment",
+      "main",
+      `启动前环境提醒：\n${blockedSteps.map((step) => `- ${step}`).join("\n")}`,
+      "system",
+    );
+  }
   const form = new FormData(els.meetingForm);
   const payload = Object.fromEntries(form.entries());
   payload.participants = [];

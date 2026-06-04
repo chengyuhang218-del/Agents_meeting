@@ -10,7 +10,7 @@ from typing import Callable
 from .models import AgentResult, AgentSpec, Task
 from .registry import AgentRegistry
 
-OPENCLAW_BIN = os.getenv("AGENT_MEETTING_OPENCLAW_BIN", "/opt/homebrew/bin/openclaw")
+OPENCLAW_BIN = os.getenv("AGENT_MEETTING_OPENCLAW_BIN") or os.getenv("OPENCLAW_BIN") or "openclaw"
 OPENCLAW_TIMEOUT = int(os.getenv("AGENT_MEETTING_OPENCLAW_TIMEOUT", "300"))
 OPENCLAW_RETRIES = int(os.getenv("AGENT_MEETTING_OPENCLAW_RETRIES", "2"))
 OPENCLAW_RETRY_DELAY = float(os.getenv("AGENT_MEETTING_OPENCLAW_RETRY_DELAY", "8"))
